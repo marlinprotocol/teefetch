@@ -11,6 +11,7 @@ use axum::extract::State;
 use axum::routing::post;
 use axum::Json;
 use axum::Router;
+use clap::Parser;
 use k256::ecdsa::SigningKey;
 use reqwest::Client;
 use reqwest::Method;
@@ -162,12 +163,23 @@ struct AppState {
     secret: [u8; 32],
 }
 
+#[derive(Parser, Debug)]
+struct Args {
+    #[arg(short, long)]
+    secret: String,
+    #[arg(short, long, default_value = "127.0.0.1:3000")]
+    addr: String,
+}
+
 #[tokio::main]
 async fn main() -> Result<()> {
+    let args = Args::parse();
+    let secret: [u8; 32] = std::fs::read(args.secret)?.as_slice().try_into()?;
+
     let app = Router::new()
         .route("/json", post(teefetch))
-        .with_state(AppState { secret: [1; 32] });
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
+        .with_state(AppState { secret });
+    let listener = tokio::net::TcpListener::bind(args.addr).await?;
 
     axum::serve(listener, app).await?;
 
