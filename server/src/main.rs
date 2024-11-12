@@ -3,6 +3,8 @@ use std::time::SystemTime;
 use std::time::UNIX_EPOCH;
 
 use alloy::sol;
+use alloy::sol_types::eip712_domain;
+use alloy::sol_types::SolStruct;
 use anyhow::Result;
 use axum::routing::post;
 use axum::Json;
@@ -69,9 +71,9 @@ async fn teefetch(Json(request): Json<Request>) -> Result<Json<Response>, Status
                 .map_err(|_| StatusCode::BAD_REQUEST)?,
             &request.url,
         )
-        .body(request.body);
+        .body(request.body.clone());
 
-    for (key, value) in request.headers {
+    for (key, value) in request.headers.clone() {
         req_builder = req_builder.header(key, value);
     }
 
@@ -106,6 +108,33 @@ async fn teefetch(Json(request): Json<Request>) -> Result<Json<Response>, Status
         .duration_since(UNIX_EPOCH)
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .as_secs() as u64;
+
+    let domain = eip712_domain! {
+        name: "Teefetch",
+        version: "1",
+    };
+    let signing_struct = RequestResponseData {
+        requestData: RequestData {
+            url: request.url,
+            method: request.method,
+            headerKeys: request.headers.keys().map(|k| k.to_owned()).collect(),
+            headerValues: request.headers.values().map(|k| k.to_owned()).collect(),
+            body: request.body,
+            responseHeaders: request.response_headers,
+        },
+        responseData: ResponseData {
+            handler: 1,
+            status,
+            headerKeys: headers.keys().map(|k| k.to_owned()).collect(),
+            headerValues: headers.values().map(|k| k.to_owned()).collect(),
+            body: body.clone(),
+            timestamp,
+        },
+    };
+
+    let signing_hash = signing_struct.eip712_signing_hash(&domain);
+
+    // TODO: sign
 
     Ok(Json(Response {
         handler: 1,
