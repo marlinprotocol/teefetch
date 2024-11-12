@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "enclave": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "server": [
+          "server"
+        ]
+      },
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-nAClPB1C0tWTaUnieqTee0WpuncUQF+lJDbpHYWKxIk=",
+        "path": "./enclave",
+        "type": "path"
+      },
+      "original": {
+        "path": "./enclave",
+        "type": "path"
+      }
+    },
     "fenix": {
       "inputs": {
         "nixpkgs": [
@@ -61,6 +81,7 @@
     },
     "root": {
       "inputs": {
+        "enclave": "enclave",
         "nixpkgs": "nixpkgs",
         "server": "server"
       }
