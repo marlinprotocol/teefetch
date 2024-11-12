@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::time::SystemTime;
 use std::time::UNIX_EPOCH;
 
+use alloy::sol;
 use anyhow::Result;
 use axum::routing::post;
 use axum::Json;
@@ -30,6 +31,31 @@ struct Response {
     body: String,
     timestamp: u64,
     signature: String,
+}
+
+sol! {
+    struct RequestData {
+        string url;
+        string method;
+        string[] headerKeys;
+        string[] headerValues;
+        string body;
+        string[] responseHeaders;
+    }
+
+    struct ResponseData {
+        uint8 handler;
+        uint16 status;
+        string[] headerKeys;
+        string[] headerValues;
+        string body;
+        uint64 timestamp;
+    }
+
+    struct RequestResponseData {
+        RequestData requestData;
+        ResponseData responseData;
+    }
 }
 
 async fn teefetch(Json(request): Json<Request>) -> Result<Json<Response>, StatusCode> {
