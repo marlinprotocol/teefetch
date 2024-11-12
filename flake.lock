@@ -12,7 +12,7 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-FXHKSKC5g6XUPdF+sczgkpd9NSzIiE6YsjLF1oyIxoM=",
+        "narHash": "sha256-OHayukA94p30gfz42Pq4abUIgXlvJ1itj1I21hBaKH4=",
         "path": "./enclave",
         "type": "path"
       },
