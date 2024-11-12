@@ -2,13 +2,16 @@ use std::collections::HashMap;
 use std::time::SystemTime;
 use std::time::UNIX_EPOCH;
 
+use alloy::hex;
 use alloy::sol;
 use alloy::sol_types::eip712_domain;
 use alloy::sol_types::SolStruct;
 use anyhow::Result;
+use axum::extract::State;
 use axum::routing::post;
 use axum::Json;
 use axum::Router;
+use k256::ecdsa::SigningKey;
 use reqwest::Client;
 use reqwest::Method;
 use reqwest::StatusCode;
@@ -60,7 +63,10 @@ sol! {
     }
 }
 
-async fn teefetch(Json(request): Json<Request>) -> Result<Json<Response>, StatusCode> {
+async fn teefetch(
+    State(state): State<AppState>,
+    Json(request): Json<Request>,
+) -> Result<Json<Response>, StatusCode> {
     let client = Client::new();
 
     let mut req_builder = client
@@ -131,10 +137,14 @@ async fn teefetch(Json(request): Json<Request>) -> Result<Json<Response>, Status
             timestamp,
         },
     };
-
     let signing_hash = signing_struct.eip712_signing_hash(&domain);
 
-    // TODO: sign
+    let signing_key = SigningKey::from_bytes(&state.secret.into())
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let (signature, recovery) = signing_key
+        .sign_prehash_recoverable(signing_hash.as_slice())
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     Ok(Json(Response {
         handler: 1,
@@ -142,13 +152,21 @@ async fn teefetch(Json(request): Json<Request>) -> Result<Json<Response>, Status
         headers,
         body,
         timestamp,
-        signature: String::new(),
+        signature: hex::encode_prefixed(signature.to_bytes())
+            + &hex::encode(&[recovery.to_byte() + 27]),
     }))
+}
+
+#[derive(Clone)]
+struct AppState {
+    secret: [u8; 32],
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let app = Router::new().route("/json", post(teefetch));
+    let app = Router::new()
+        .route("/json", post(teefetch))
+        .with_state(AppState { secret: [1; 32] });
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
 
     axum::serve(listener, app).await?;
