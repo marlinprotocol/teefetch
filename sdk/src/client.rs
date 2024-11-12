@@ -65,7 +65,7 @@ impl OysterHttpsClient {
     }
     pub async fn verify_signature(&self, request: &Request, response: &Response) -> Result<()> {
         // Verify attestation
-        let attestation_doc = get_attestation_doc(format!("http://{}:1300/attestation", self.ip).parse()?).await?;
+        let attestation_doc = get_attestation_doc(format!("http://{}:1301/attestation/raw", self.ip).parse()?).await?;
         let parsed = decode_attestation(attestation_doc.clone())?;
         let expected_verifying_key = hex::encode(verify_with_timestamp(attestation_doc, parsed.pcrs, parsed.timestamp)?);
         // Create digest
