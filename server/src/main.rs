@@ -2,7 +2,11 @@ use std::collections::HashMap;
 
 use anyhow::Result;
 use axum::routing::post;
+use axum::Json;
 use axum::Router;
+use reqwest::Client;
+use reqwest::Method;
+use reqwest::StatusCode;
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -13,7 +17,6 @@ struct Request {
     headers: HashMap<String, String>,
     excluded_headers: HashMap<String, String>,
     body: String,
-    excluded_body: String,
     response_headers: Vec<String>,
 }
 
@@ -26,7 +29,59 @@ struct Response {
     signature: String,
 }
 
-async fn teefetch() {}
+async fn teefetch(Json(request): Json<Request>) -> Result<Json<Response>, StatusCode> {
+    let client = Client::new();
+
+    let mut req_builder = client
+        .request(
+            request
+                .method
+                .parse::<Method>()
+                .map_err(|_| StatusCode::BAD_REQUEST)?,
+            &request.url,
+        )
+        .body(request.body);
+
+    for (key, value) in request.headers {
+        req_builder = req_builder.header(key, value);
+    }
+
+    for (key, value) in request.excluded_headers {
+        req_builder = req_builder.header(key, value);
+    }
+
+    let response = req_builder
+        .send()
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let status = response.status().as_u16();
+    let headers: HashMap<String, String> = response
+        .headers()
+        .iter()
+        .filter(|(name, _)| request.response_headers.contains(&name.to_string()))
+        .map(|(name, value)| {
+            (
+                name.to_string(),
+                value.to_str().unwrap_or_default().to_string(),
+            )
+        })
+        .collect();
+
+    let body = response
+        .text()
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(Json(Response {
+        handler: 1,
+        status,
+        headers,
+        body,
+        // TODO: implement
+        signature: String::new(),
+    }))
+}
 
 #[tokio::main]
 async fn main() -> Result<()> {
