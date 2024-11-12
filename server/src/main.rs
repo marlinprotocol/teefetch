@@ -1,4 +1,6 @@
 use std::collections::HashMap;
+use std::time::SystemTime;
+use std::time::UNIX_EPOCH;
 
 use anyhow::Result;
 use axum::routing::post;
@@ -26,6 +28,7 @@ struct Response {
     status: u16,
     headers: HashMap<String, String>,
     body: String,
+    timestamp: u64,
     signature: String,
 }
 
@@ -73,12 +76,17 @@ async fn teefetch(Json(request): Json<Request>) -> Result<Json<Response>, Status
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
+    let timestamp = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .as_secs() as u64;
+
     Ok(Json(Response {
         handler: 1,
         status,
         headers,
         body,
-        // TODO: implement
+        timestamp,
         signature: String::new(),
     }))
 }
