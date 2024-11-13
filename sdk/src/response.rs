@@ -105,4 +105,8 @@ impl OysterHttpsResponse {
     pub fn abi_encode(&self) -> Result<Vec<u8>> {
         Ok(self._sol_data().abi_encode_params())
     }
+
+    pub fn get_signature(&self) -> &str {
+        &self.response.signature
+    }
 }

@@ -29,5 +29,9 @@ async fn main() {
     let response = client.oyster_fetch(request).await.unwrap();
     response.verify().await.unwrap();
     println!("Response verified");
-    println!("{:?}", hex::encode(response.abi_encode().unwrap()));
+    println!(
+        "RequestResponseData: \n{:?}",
+        hex::encode(response.abi_encode().unwrap())
+    );
+    println!("Signature: \n{:?}", response.get_signature());
 }
