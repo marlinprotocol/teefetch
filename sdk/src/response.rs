@@ -90,7 +90,6 @@ impl OysterHttpsResponse {
     }
 
     fn _create_digest(&self) -> Vec<u8> {
-        // TODO: Implement digest creation
         let domain = eip712_domain! {
             name: "Teefetch",
             version: "1",

@@ -13,7 +13,6 @@ struct Cli {
 #[tokio::main]
 async fn main() {
     let args = Cli::parse();
-    // TODO: Change to your Oyster device IP address
     let client = OysterHttpsClient::new(&args.ip);
     let mut headers = HashMap::new();
     headers.insert("Host".to_string(), "example.com".to_string());
