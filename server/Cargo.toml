@@ -1,0 +1,19 @@
+[package]
+name = "server"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+alloy = { version = "0.6.2", features = ["sol-types"] }
+anyhow = "1.0.93"
+axum = "0.7.7"
+clap = { version = "4.5.20", features = ["derive"] }
+k256 = { version = "0.13.4", features = ["alloc", "ecdsa-core"] }
+reqwest = { version = "0.12.9", default-features = false, features = ["rustls-tls"] }
+serde = { version = "1.0.215", features = ["derive"] }
+tokio = { version = "1.41.1", features = ["full"] }
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
