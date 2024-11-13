@@ -1,30 +1,8 @@
 {
   "nodes": {
-    "enclave": {
-      "inputs": {
-        "nitro-util": "nitro-util",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "server": [
-          "server"
-        ]
-      },
-      "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-OHayukA94p30gfz42Pq4abUIgXlvJ1itj1I21hBaKH4=",
-        "path": "./enclave",
-        "type": "path"
-      },
-      "original": {
-        "path": "./enclave",
-        "type": "path"
-      }
-    },
     "fenix": {
       "inputs": {
         "nixpkgs": [
-          "server",
           "nixpkgs"
         ],
         "rust-analyzer-src": "rust-analyzer-src"
@@ -64,7 +42,6 @@
     "naersk": {
       "inputs": {
         "nixpkgs": [
-          "server",
           "nixpkgs"
         ]
       },
@@ -86,7 +63,6 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "nixpkgs": [
-          "enclave",
           "nixpkgs"
         ]
       },
@@ -122,9 +98,10 @@
     },
     "root": {
       "inputs": {
-        "enclave": "enclave",
-        "nixpkgs": "nixpkgs",
-        "server": "server"
+        "fenix": "fenix",
+        "naersk": "naersk",
+        "nitro-util": "nitro-util",
+        "nixpkgs": "nixpkgs"
       }
     },
     "rust-analyzer-src": {
@@ -142,25 +119,6 @@
         "ref": "nightly",
         "repo": "rust-analyzer",
         "type": "github"
-      }
-    },
-    "server": {
-      "inputs": {
-        "fenix": "fenix",
-        "naersk": "naersk",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-+yA/EflV/a1AH9J1RqKB/4XFbG4XKmvxNsL36GMTslc=",
-        "path": "./server",
-        "type": "path"
-      },
-      "original": {
-        "path": "./server",
-        "type": "path"
       }
     },
     "systems": {

@@ -1,25 +1,37 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
-    server = {
-      url = "path:./server";
+    fenix = {
+      url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    enclave = {
-      url = "path:./enclave";
+    naersk = {
+      url = "github:nix-community/naersk";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.server.follows = "server";
+    };
+    nitro-util = {
+      url = "github:/monzo/aws-nitro-util";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { self, nixpkgs, server, enclave }:
-    let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages."${system}";
-    in
-    {
-      packages.${system} = {
-        server = server.packages.${system}.default;
-        enclave = enclave.packages.${system}.default;
-      };
+  outputs = {
+    self,
+    nixpkgs,
+    fenix,
+    naersk,
+    nitro-util,
+  }: let
+    system = "x86_64-linux";
+    server = import ./server {
+      inherit nixpkgs fenix naersk;
     };
+    enclave = import ./enclave {
+      inherit nixpkgs server nitro-util;
+    };
+  in {
+    packages.${system} = {
+      server = server.packages.${system}.default;
+      enclave = enclave.packages.${system}.default;
+    };
+  };
 }
