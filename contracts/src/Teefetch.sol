@@ -75,7 +75,7 @@ contract Teefetch {
         ResponseData responseData;
     }
 
-    bytes32 private constant DOMAIN_SEPARATOR =
+    bytes32 public constant DOMAIN_SEPARATOR =
         keccak256(
             abi.encode(
                 keccak256("EIP712Domain(string name,string version)"),
@@ -84,19 +84,19 @@ contract Teefetch {
             )
         );
 
-    bytes32 private constant REQUESTRESPONSEDATA_TYPEHASH =
+    bytes32 public constant REQUESTRESPONSEDATA_TYPEHASH =
         keccak256(
             "RequestResponseData(RequestData requestData,ResponseData responseData)"
             "RequestData(string url,string method,string[] headerKeys,string[] headerValues,string body,string[] responseHeaders)"
             "ResponseData(uint8 handler,uint16 status,string[] headerKeys,string[] headerValues,string body,uint64 timestamp)"
         );
 
-    bytes32 private constant REQUESTDATA_TYPEHASH =
+    bytes32 public constant REQUESTDATA_TYPEHASH =
         keccak256(
             "RequestData(string url,string method,string[] headerKeys,string[] headerValues,string body,string[] responseHeaders)"
         );
 
-    bytes32 private constant RESPONSEDATA_TYPEHASH =
+    bytes32 public constant RESPONSEDATA_TYPEHASH =
         keccak256(
             "ResponseData(uint8 handler,uint16 status,string[] headerKeys,string[] headerValues,string body,uint64 timestamp)"
         );
