@@ -91,7 +91,7 @@ impl OysterHttpsResponse {
 
     fn _create_digest(&self) -> Vec<u8> {
         let domain = eip712_domain! {
-            name: "Teefetch",
+            name: "marlin.oyster.Teefetch",
             version: "1",
         };
 

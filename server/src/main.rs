@@ -117,7 +117,7 @@ async fn teefetch(
         .as_secs() as u64;
 
     let domain = eip712_domain! {
-        name: "Teefetch",
+        name: "marlin.oyster.Teefetch",
         version: "1",
     };
     let signing_struct = RequestResponseData {
