@@ -79,7 +79,7 @@ impl OysterHttpsResponse {
                 responseHeaders: self.request.response_headers.clone(),
             },
             responseData: ResponseData {
-                handler: 1,
+                handler: self.response.handler,
                 status: self.response.status,
                 headerKeys: self.response.headers.keys().map(|k| k.to_owned()).collect(),
                 headerValues: self.response.headers.values().map(|k| k.to_owned()).collect(),
@@ -103,7 +103,7 @@ impl OysterHttpsResponse {
     }
 
     pub fn abi_encode(&self) -> Result<Vec<u8>> {
-        Ok(self._sol_data().abi_encode_params())
+        Ok(self._sol_data().abi_encode())
     }
 
     pub fn get_signature(&self) -> &str {
