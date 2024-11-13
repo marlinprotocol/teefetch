@@ -31,7 +31,7 @@ contract Teefetch {
         uint64 _timestampInMilliseconds
     ) external {
         require(
-            _timestampInMilliseconds > block.timestamp * 1000 - 300000,
+            _timestampInMilliseconds > block.timestamp * 1000 - 3600000,
             "too old"
         );
         bytes32 _journalDigest = keccak256(
