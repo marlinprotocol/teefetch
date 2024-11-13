@@ -1,3 +1,4 @@
+use alloy::hex;
 use clap::Parser;
 use oyster_https::OysterHttpsClient;
 use oyster_https::Request;
@@ -25,7 +26,8 @@ async fn main() {
         excluded_body: "".to_string(),
         response_headers: vec![],
     };
-    let response = client.oyster_fetch(&request).await.unwrap();
-    println!("{:?}", serde_json::to_string(&response).unwrap());
-    client.verify_signature(&request, &response).await.unwrap();
+    let response = client.oyster_fetch(request).await.unwrap();
+    response.verify().await.unwrap();
+    println!("Response verified");
+    println!("{:?}", hex::encode(response.abi_encode().unwrap()));
 }
