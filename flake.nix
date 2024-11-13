@@ -29,6 +29,7 @@
       inherit nixpkgs server nitro-util;
     };
   in {
+    formatter.${system} = nixpkgs.legacyPackages.${system}.alejandra;
     packages.${system} = {
       server = server.packages.${system}.default;
       enclave = enclave.packages.${system}.default;
