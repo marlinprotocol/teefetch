@@ -13,6 +13,8 @@ contract Teefetch {
 
     mapping(address => bool) public signers;
 
+    event Enrolled(address signer);
+
     constructor(
         IRiscZeroVerifier _verifier,
         bytes32 _imageId,
@@ -50,6 +52,8 @@ contract Teefetch {
         address _signer = address(uint160(uint256(keccak256(_signerPubkey))));
 
         signers[_signer] = true;
+
+        emit Enrolled(_signer);
     }
 
     struct RequestData {
