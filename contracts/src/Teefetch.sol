@@ -5,8 +5,8 @@ import "../lib/risc0-ethereum/contracts/src/IRiscZeroVerifier.sol";
 import "../lib/risc0-ethereum/lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol";
 
 contract Teefetch {
-    IRiscZeroVerifier immutable VERIFIER;
-    bytes32 immutable IMAGE_ID;
+    IRiscZeroVerifier public immutable VERIFIER;
+    bytes32 public immutable IMAGE_ID;
 
     bytes public pcrs;
     bytes public rootKey;
