@@ -8,7 +8,7 @@ import "../../lib/risc0-ethereum/contracts/src/IRiscZeroVerifier.sol";
 
 contract DeployScript is Script {
     IRiscZeroVerifier private constant VERIFIER =
-        IRiscZeroVerifier(0x0b144E07A0826182B6b59788c34b32Bfa86Fb711);
+        IRiscZeroVerifier(0x84b943E31e7fAe6072ce5F75eb4694C7D5F9b0cF);
     bytes32 private constant IMAGE_ID =
         0xdce6b83ae4bdcf22edbd23b86762ce08e98b1767eab21cdd3bb9d4d1c4d3e2b8;
     bytes private constant PCRS =
