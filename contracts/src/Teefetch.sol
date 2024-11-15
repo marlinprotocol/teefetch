@@ -34,7 +34,7 @@ contract Teefetch {
             _timestampInMilliseconds > block.timestamp * 1000 - 3600000,
             "too old"
         );
-        bytes32 _journalDigest = keccak256(
+        bytes32 _journalDigest = sha256(
             abi.encodePacked(
                 _timestampInMilliseconds,
                 pcrs,
