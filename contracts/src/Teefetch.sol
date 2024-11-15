@@ -11,7 +11,7 @@ contract Teefetch {
     bytes public pcrs;
     bytes public rootKey;
 
-    mapping(address => bool) signers;
+    mapping(address => bool) public signers;
 
     constructor(
         IRiscZeroVerifier _verifier,
