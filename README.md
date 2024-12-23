@@ -101,9 +101,10 @@ Key services:
 
 ## Getting Started
 
-1. Setup the enclave environment:
+1. Build and setup the enclave environment using nix:
 ```bash
-cd enclave && ./setup.sh
+nix develop
+nix build
 ```
 
 2. Deploy the smart contracts:
