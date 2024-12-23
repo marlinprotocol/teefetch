@@ -50,9 +50,10 @@ contract MyContract {
 The Rust SDK provides a client interface for making verifiable HTTPS requests.
 
 ```rust
-use teefetch_sdk::OysterHttpsClient;
+use oyster_https::{OysterHttpsClient, Request};
+use std::collections::HashMap;
 
-async fn example() {
+async fn example() -> anyhow::Result<()> {
     // Initialize client
     let client = OysterHttpsClient::new("localhost");
     
@@ -61,7 +62,10 @@ async fn example() {
         url: "https://api.example.com/data".to_string(),
         method: "GET".to_string(),
         headers: HashMap::new(),
-        // ... other fields
+        excluded_headers: HashMap::new(),
+        body: String::new(),
+        excluded_body: String::new(),
+        response_headers: Vec::new(),
     };
     
     let response = client.oyster_fetch(request).await?;
@@ -71,6 +75,7 @@ async fn example() {
     
     // Get data for on-chain verification
     let encoded = response.abi_encode()?;
+    Ok(())
 }
 ```
 
