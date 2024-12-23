@@ -4,7 +4,7 @@ A system for making verifiable HTTPS requests from within a Trusted Execution En
 
 ## Overview
 
-This project enables secure and verifiable HTTPS requests by executing them within a TEE, generating cryptographic proofs of the responses that can be verified by smart contracts on the blockchain. This creates a trusted bridge between web2 HTTPS endpoints and web3 smart contracts.
+This project enables secure and verifiable HTTPS requests by executing them within a TEE, generating cryptographic proofs of the responses that can be verified by smart contracts on the blockchain. This creates a verifiable bridge between Web2 HTTPS endpoints and Web3 smart contracts.
 
 ## Repository Structure
 
@@ -18,6 +18,7 @@ The repository consists of three main components:
 ## How It Works
 
 0. A TEE server is running and its attestation is verified on-chain
+
 1. A client makes an HTTPS request through the SDK
 2. The request is forwarded to the TEE server
 3. The TEE executes the HTTPS request in a secure environment
@@ -101,22 +102,19 @@ Key services:
 
 ## Getting Started
 
-1. Build and setup the enclave environment using nix:
+1. Build the enclave using Nix:
 ```bash
-nix develop
-nix build
+nix build -v .#enclave
 ```
 
-2. Deploy the smart contracts:
+2. Deploy the enclave using the Oyster Hub - https://docs.marlin.org/user-guides/oyster/instances/quickstart/deploy
+
+3. Deploy the smart contracts:
 ```bash
 cd contracts && forge script script/deploy/Teefetch.s.sol
 ```
 
-3. Run the example SDK code:
+4. Run the example SDK code:
 ```bash
 cd sdk && cargo run --example example
 ```
-
-## License
-
-[Add license information]
