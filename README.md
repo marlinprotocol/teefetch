@@ -17,6 +17,7 @@ The repository consists of three main components:
 
 ## How It Works
 
+0. A TEE server is running and its attestation is verified on-chain
 1. A client makes an HTTPS request through the SDK
 2. The request is forwarded to the TEE server
 3. The TEE executes the HTTPS request in a secure environment
